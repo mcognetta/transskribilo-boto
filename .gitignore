@@ -1,3 +1,13 @@
+# personal
+.bot_key
+howto.txt
+bot_config.ini
+
+
+# env
+bot-env/
+transskribilo-boto-env/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
