@@ -23,7 +23,6 @@ async def on_ready():
     print("transskribilo ready")
 
 
-#  Ĉ, Ĝ, Ĥ, Ĵ, Ŝ and Ŭ.
 replace_list = {
     "cx": "ĉ",
     "gx": "ĝ",
@@ -56,17 +55,27 @@ def _queue_msg(author, content, channel, hook_msg):
 
 
 def _message_metadata_filter(message):
+
+    # filter out messages with bad metadata
+
+    # if the author isn't a use
     author = message.author
     if not isinstance(author, discord.member.Member):
         return False
+
     channel = message.channel
     guild = channel.guild
     role = discord.utils.find(lambda r: r.name == "aŭttransskribiĝebla", guild.roles)
 
+    # if the user hasn't opted-in
     if role not in author.roles:
         return False
+
+    # if the message isn't plain text
     if message.embeds:
         return False
+
+    # if the message has attachments, files, etc
     if message.attachments:
         return False
 
@@ -79,11 +88,22 @@ def ascii_condition(t):
 
 
 def token_validator(token):
+
+    # check if tokens are valid via some heuristics
+
+    # not too long
     if len(token) > 50:
         return False
-    if token[0] == '@': return False
+
+    # not a mention
+    if token[0] == "@":
+        return False
+
+    # not a filtered word (things with literal ux, cx, etc.)
     if token in bot._ignore_list:
         return False
+
+    # not words with lots of punctuation inside (emails, websites, etc)
     if token[-1] in _allowed_ending_punc:
         return all(ascii_condition(t) for t in token[:-1])
     else:
@@ -91,6 +111,8 @@ def token_validator(token):
 
 
 def replacer(s):
+
+    # iterate over tokens and replace them via the unicode rules
     replaced = False
     split_text = s.split(" ")
     for idx, token in enumerate(split_text):
@@ -104,6 +126,8 @@ def replacer(s):
 
 
 def _find_last_edited_msg(author, channel):
+    # search backwards through the cache to find a message that
+    # matches the author and channel (and then remove it)
     for i in range(len(bot._message_cache) - 1, -1, -1):
         if (
             bot._message_cache[i].author == author
@@ -115,7 +139,10 @@ def _find_last_edited_msg(author, channel):
     return None
 
 
-@bot.command(brief="Malfari vian lastan transskribitan mesaĝon.", help="Malfari vian lastan transskribitan mesaĝon.")
+@bot.command(
+    brief="Malfari vian lastan transskribitan mesaĝon.",
+    help="Malfari vian lastan transskribitan mesaĝon.",
+)
 async def malfaru(ctx):
     msg, author = ctx.message, ctx.author
     channel = msg.channel
@@ -124,7 +151,7 @@ async def malfaru(ctx):
     # channel, or return None
     edited_msg = _find_last_edited_msg(author, channel)
     if edited_msg:
-        
+
         # fetch and delete the edited message
         webhook_msg = await ctx.fetch_message(edited_msg.webhook_msg.id)
         await webhook_msg.delete()
@@ -137,8 +164,8 @@ async def malfaru(ctx):
             avatar_url=author.avatar_url,
         )
         await hook.delete()
-		
-		# emojis for "pardonu"
+
+        # emojis for "pardonu"
         for emoji in [
             "\U0001F1F5",
             "\U0001F1E6",
@@ -149,7 +176,7 @@ async def malfaru(ctx):
             "\U0001F1FA",
         ]:
             await msg.add_reaction(emoji=emoji)
-   		# delete the undo command message so that it doesn't
+        # delete the undo command message so that it doesn't
         # clutter the screen
         await msg.delete(delay=2)
     else:
@@ -160,30 +187,43 @@ async def malfaru(ctx):
 
 @bot.event
 async def on_message(message):
-    author = message.author
-    content = message.content
+    author, content, channel = message.author, message.content, message.channel
 
+    # filter out messages we don't want to process
+    # for example, users who have not opted in or messages
+    # that contain files, etc. that we do not want to be
+    # responsible for
     if _message_metadata_filter(message):
-        replaced, edited_text = replacer(message.content)
+
+        # a transcription function that returns a flag indicating if any
+        # transcription took place and the (possibly) edited text
+        replaced, edited_text = replacer(content)
 
         if replaced:
+
+            hook = await message.channel.create_webhook(name="transskribilo_hook")
             await message.delete()
-            channel = message.channel
-            _webhook = await channel.create_webhook(name="transskribilo_hook")
-            webhook_msg = await _webhook.send(
+
+            # send the transcribed message via the webhook
+            # with the original author's information
+            webhook_msg = await hook.send(
                 edited_text,
                 username=author.display_name + " | (transskribita)",
                 avatar_url=author.avatar_url,
+                # allows the webhook message info to be cached
                 wait=True,
             )
+
+            # stores the message in an LRU cache in case of
+            # an undo command
             _queue_msg(author, content, channel, webhook_msg)
-            await _webhook.delete()
+            await hook.delete()
 
     await bot.process_commands(message)
 
 
 config_parser = configparser.ConfigParser()
-config_parser.read('bot_config.ini')
-key = config_parser['DEFAULT']['key']
+config_parser.read("bot_config.ini")
+key = config_parser["DEFAULT"]["key"]
 
 bot.run(key)
