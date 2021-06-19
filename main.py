@@ -160,7 +160,7 @@ async def malfaru(ctx):
         hook = await msg.channel.create_webhook(name="transskribilo_hook")
         await hook.send(
             edited_msg.original_content,
-            username=author.name + " | (malfarita)",
+            username=author.display_name + " | (malfarita)",
             avatar_url=author.avatar_url,
         )
         await hook.delete()
