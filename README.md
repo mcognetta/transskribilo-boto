@@ -32,7 +32,7 @@ Once you create the bot, get its key, and add it to your server, create a `bot_c
 key = <your bot key here>
 ```
 
-You should then create a role on your server called "aŭttransskribiĝebla". Users can opt-in to this role and the bot will automatically transcribe their messages.
+You should then create a role on your server called `aŭttransskribiĝebla`. Users can opt-in to this role and the bot will automatically transcribe their messages.
 
 You can then run the bot via just `python3 main.py` after you have installed the dependencies (via `poetry install`).
 
