@@ -1,5 +1,5 @@
 # transskribilo-boto
-Roboto por aŭtomata transskribado el x-sistemo al unikodan tekston.
+Roboto por aŭtomata transskribado el x-sistemo al unikodan tekston en Diskordo.
 
 # Intro
 
@@ -32,4 +32,14 @@ Once you create the bot, get its key, and add it to your server, create a `bot_c
 key = <your bot key here>
 ```
 
+You should then create a role on your server called "aŭttransskribiĝebla". Users can opt-in to this role and the bot will automatically transcribe their messages.
+
 You can then run the bot via just `python3 main.py` after you have installed the dependencies (via `poetry install`).
+
+### TODOs
+ - Add channel filter to allow for non-Esperanto channels where the bot does not run.
+    - Should be specified in the `bot_config.ini` file.
+ - Allow for custom opt-in role names.
+    - Should be specified in the `bot_config.ini` file.
+ - Make the message cache system better.
+    - Probably just need to do a dictionary keyed by user/channel value being their last message and have a timer set to clear the cache after a set amount of time.
