@@ -32,4 +32,4 @@ Once you create the bot, get its key, and add it to your server, create a `bot_c
 key = <your bot key here>
 ```
 
-You can then run the bot via just `python3 main.py` after you have installed the dependencies (in the poetry file).
+You can then run the bot via just `python3 main.py` after you have installed the dependencies (via `poetry install`).
