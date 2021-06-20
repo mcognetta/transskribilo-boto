@@ -1,6 +1,8 @@
 # transskribilo-boto
 Roboto por aŭtomata transskribado el x-sistemo al unikodan tekston en Diskordo.
 
+![](bona.gif)
+
 # Intro
 
 __Feel free to open issues if you find bugs or have improvements to make. Keep in mind that this was a one-day project to learn about Discord.py and the author is not perfect.__
