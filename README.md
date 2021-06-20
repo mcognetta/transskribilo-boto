@@ -1,5 +1,5 @@
 # transskribilo-boto
-Roboto por aŭtomata transskribado el x-sistemo al unikodan tekston en Diskordo.
+Roboto por aŭtomata transskribado el x-sistemo al unikodan tekston  Diskordo.
 
 ![](bona.gif)
 
