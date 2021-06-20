@@ -3,7 +3,7 @@ Roboto por aŭtomata transskribado el x-sistemo al unikodan tekston en Diskordo.
 
 # Intro
 
-__Feel free to open issues if you find bugs or have improvements to make. Keep in mind that this was a one-day project and the author is not perfect.__
+__Feel free to open issues if you find bugs or have improvements to make. Keep in mind that this was a one-day project to learn about Discord.py and the author is not perfect.__
 
 This is a small Discord bot for transcribing Esperanto text written with the x-system into Unicode. It is not meant to be complete or cover all cases.
 
