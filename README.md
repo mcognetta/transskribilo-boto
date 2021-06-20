@@ -45,3 +45,5 @@ You can then run the bot via just `python3 main.py` after you have installed the
     - Should be specified in the `bot_config.ini` file.
  - Make the message cache system better.
     - Probably just need to do a dictionary keyed by user/channel value being their last message and have a timer set to clear the cache after a set amount of time.
+ - Set webhook color to match original author.
+   - This is blocked by the Discord API. See https://github.com/discord/discord-api-docs/issues/1544 and https://support.discord.com/hc/en-us/community/posts/360046510592-Webhook-colors.
